@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<title>Bab 3: Input, Output, dan Interaksi dengan Pengguna</title>
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #F8FAFC;
+    --surface: #FFFFFF;
+    --surface-hover: #F1F5F9;
+    --heading: #0F172A;
+    --text: #334155;
+    --muted: #64748B;
+    --faint: #94A3B8;
+    --accent: #4F46E5;
+    --gold: #D99A16;
+    --border: #E2E8F0;
+    --success: #16A34A;
+    --code-bg: #0F172A;
+    --code-text: #E2E8F0;
+    --glow-1: rgba(79, 70, 229, .10);
+    --glow-2: rgba(217, 154, 22, .07);
+    --warn-bg: #FFFBEB;
+    --warn-border: #D99A16;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #0B0F19;
+      --surface: #111827;
+      --surface-hover: #182235;
+      --heading: #F8FAFC;
+      --text: #CBD5E1;
+      --muted: #94A3B8;
+      --faint: #64748B;
+      --accent: #818CF8;
+      --gold: #F5C451;
+      --border: #263244;
+      --success: #4ADE80;
+      --code-bg: #0A0F1C;
+      --code-text: #CBD5E1;
+      --glow-1: rgba(79, 70, 229, .16);
+      --glow-2: rgba(245, 196, 81, .06);
+      --warn-bg: #1A1608;
+      --warn-border: #F5C451;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0B0F19;
+    --surface: #111827;
+    --surface-hover: #182235;
+    --heading: #F8FAFC;
+    --text: #CBD5E1;
+    --muted: #94A3B8;
+    --faint: #64748B;
+    --accent: #818CF8;
+    --gold: #F5C451;
+    --border: #263244;
+    --success: #4ADE80;
+    --code-bg: #0A0F1C;
+    --code-text: #CBD5E1;
+    --glow-1: rgba(79, 70, 229, .16);
+    --glow-2: rgba(245, 196, 81, .06);
+    --warn-bg: #1A1608;
+    --warn-border: #F5C451;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background:
+      radial-gradient(circle at 10% 0%, var(--glow-1), transparent 38%),
+      radial-gradient(circle at 92% 8%, var(--glow-2), transparent 30%),
+      var(--bg);
+    background-repeat: no-repeat;
+    color: var(--text);
+    font-family: ui-sans-serif, system-ui, 'Segoe UI', sans-serif;
+    line-height: 1.75;
+  }
+  .wrap { max-width: 780px; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
+  header.hero { margin-bottom: 3rem; border-bottom: 1px solid var(--border); padding-bottom: 2rem; }
+  .eyebrow { font-family: ui-monospace, monospace; font-size: .75rem; letter-spacing: .2em; text-transform: uppercase; color: var(--accent); margin: 0 0 .9rem; }
+  .rule { width: 2.5rem; height: 2px; background: var(--gold); margin: 0 0 1.1rem; }
+  h1 { font-size: 2.25rem; line-height: 1.2; margin: 0 0 .75rem; letter-spacing: -.02em; color: var(--heading); }
+  h2 { font-size: 1.4rem; margin-top: 3rem; letter-spacing: -.01em; scroll-margin-top: 1.5rem; color: var(--heading); }
+  h3 { font-size: 1.05rem; margin-top: 2rem; }
+  p { color: var(--muted); }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: .95rem; }
+  th, td { text-align: left; padding: .6rem .8rem; border-bottom: 1px solid var(--border); }
+  th { color: var(--text); }
+  code { font-family: ui-monospace, 'Cascadia Code', monospace; font-size: .85em; background: var(--surface); border: 1px solid var(--border); padding: .15em .4em; border-radius: 6px; }
+  pre { background: var(--code-bg); color: var(--code-text); padding: 1.2rem 1.4rem; border-radius: 10px; overflow-x: auto; font-size: .88rem; line-height: 1.6; }
+  pre code { background: none; border: none; padding: 0; color: inherit; }
+  a { color: var(--accent); }
+  blockquote { border-left: 3px solid var(--accent); margin: 1.5rem 0; padding: .5rem 1rem; background: var(--surface); border-radius: 0 8px 8px 0; }
+  blockquote p { margin: 0; color: var(--text); }
+  ul, ol { color: var(--muted); }
+  li { margin-bottom: .35rem; }
+  .box { border: 1px solid var(--border); border-left: 3px solid var(--warn-border); background: var(--warn-bg); padding: .9rem 1.1rem; border-radius: 0 8px 8px 0; margin: 1.5rem 0; }
+  .box p { margin: 0 0 .5rem; color: var(--text); }
+  .box p:last-child { margin-bottom: 0; }
+  .box strong { color: var(--text); }
+  .toc {
+    position: fixed;
+    top: 1.5rem;
+    left: 1.5rem;
+    width: 230px;
+    max-height: calc(100vh - 3rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    font-size: .8rem;
+    display: none;
+    scrollbar-width: thin;
+    scrollbar-color: var(--muted) transparent;
+  }
+  .toc::-webkit-scrollbar { width: 5px; }
+  .toc::-webkit-scrollbar-track { background: transparent; }
+  .toc::-webkit-scrollbar-thumb { background: var(--muted); opacity: .35; border-radius: 3px; }
+  .toc::-webkit-scrollbar-thumb:hover { opacity: .6; }
+  @media (min-width: 1280px) { .toc { display: block; } }
+  .toc a { color: var(--muted); text-decoration: none; display: block; padding: .15rem 0; }
+  .toc a:hover { color: var(--accent); }
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; margin-bottom: 2.5rem; }
+  .theme-toggle {
+    flex: none;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: grid;
+    place-items: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: color .18s ease, border-color .18s ease, transform .18s cubic-bezier(.16,1,.3,1);
+  }
+  .theme-toggle:hover { color: var(--accent); border-color: var(--accent); transform: translateY(-1px); }
+  .theme-toggle:active { transform: translateY(0) scale(.96); }
+  .theme-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) {
+    .theme-toggle { transition: none; }
+    .theme-toggle:hover { transform: none; }
+  }
+
+  /* Kutipan pembuka: muncul dan tersorot saat halaman baru dimuat */
+  .quote-highlight {
+    margin: 0 0 2.5rem;
+    padding: 1.5rem 1.6rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    background: var(--surface);
+    text-align: center;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: quote-masuk .9s cubic-bezier(.16, 1, .3, 1) .15s forwards;
+  }
+  .quote-highlight span {
+    display: inline-block;
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: .01em;
+    color: var(--text);
+    background: linear-gradient(90deg, transparent, var(--primary-soft), transparent);
+    background-repeat: no-repeat;
+    background-size: 0% 100%;
+    padding: .3rem 0;
+    animation: quote-sorot 4.2s ease-in-out 1.1s infinite;
+  }
+  @keyframes quote-masuk {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes quote-sorot {
+    0%, 100% { background-size: 0% 100%; }
+    50%      { background-size: 100% 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .quote-highlight { opacity: 1; transform: none; animation: none; }
+    .quote-highlight span { background-size: 100% 100%; animation: none; }
+  }
+
+  footer { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); font-size: .9rem; }
+  footer a { display: block; padding: .2rem 0; }
+</style>
+</head>
+<body>
+<nav class="toc">
+  <p class="eyebrow">Daftar Isi</p>
+  <a href="#s1">1. Apa itu input dan output?</a>
+  <a href="#s2">2. Output dengan print()</a>
+  <a href="#s3">3. f-string untuk output</a>
+  <a href="#s4">4. Input dengan input()</a>
+  <a href="#s5">5. Hasil input() selalu string</a>
+  <a href="#s6">6. Konversi tipe data</a>
+  <a href="#s7">7. Banyak input dalam satu program</a>
+  <a href="#s8">8. Parameter sep</a>
+  <a href="#s9">9. Parameter end</a>
+  <a href="#s10">10. Catatan penting</a>
+</nav>
+
+<div class="wrap">
+  <div class="topbar">
+    <a href="../index.html" style="font-family: ui-monospace, monospace; font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; color: var(--muted);">&#8592; Daftar bab</a>
+    <button class="theme-toggle" id="theme" type="button" aria-label="Ganti tema terang atau gelap"><span aria-hidden="true">&#9788;</span></button>
+  </div>
+  <header class="hero">
+    <p class="eyebrow">Catatan Belajar</p>
+    <div class="rule"></div>
+    <h1>Bab 3: Input, Output, dan Interaksi dengan Pengguna</h1>
+    <p>Pada bab sebelumnya, program hanya menampilkan nilai yang ditulis langsung di dalam kode. Bab ini membahas cara program menerima masukan dari pengguna, mengolahnya, lalu menampilkan hasilnya kembali melalui <code>input()</code> dan <code>print()</code>.</p>
+  </header>
+
+  <div class="quote-highlight">
+    <span>Banyak cara untuk menuju satu tujuan</span>
+  </div>
+
+  <div class="box">
+    <p><strong>Catatan versi.</strong> Catatan ini mengacu pada <strong>Python 3.14.x</strong>. Nama fungsi, pesan kesalahan, dan hasil <code>print()</code> pada versi yang lebih baru dapat sedikit berbeda.</p>
+  </div>
+
+  <h2 id="s1">1. Apa itu input dan output?</h2>
+<p>Dalam pemrograman, interaksi program dengan pengguna umumnya terdiri atas input dan output.</p>
+<pre><code>INPUT          PROSES              OUTPUT
+data masuk  →  olah data  →  hasil ditampilkan</code></pre>
+<table>
+  <tr><th>Bagian</th><th>Isi</th></tr>
+  <tr><td>Input</td><td>Data yang diberikan ke program, misalnya nama, umur, harga, atau pilihan menu.</td></tr>
+  <tr><td>Proses</td><td>Pengolahan input menggunakan variabel, operator, dan logika.</td></tr>
+  <tr><td>Output</td><td>Hasil yang ditampilkan program, misalnya sapaan, perhitungan, atau laporan.</td></tr>
+</table>
+<p>Misalnya, kalkulator menerima angka 10 dan 5 sebagai input. Program menjumlahkan keduanya, lalu menampilkan 15 sebagai output.</p>
+<p>Alur umum dalam Python dapat digambarkan sebagai berikut.</p>
+<pre><code>Pengguna memasukkan angka
+          ↓
+Program menerima input
+          ↓
+Python menghitung
+          ↓
+Program menampilkan hasil</code></pre>
+<p>Python menyediakan dua fungsi bawaan yang paling dasar untuk kebutuhan ini.</p>
+<table>
+  <tr><th>Fungsi</th><th>Kegunaan</th></tr>
+  <tr><td><code>input()</code></td><td>Menerima masukan dari pengguna.</td></tr>
+  <tr><td><code>print()</code></td><td>Menampilkan informasi atau hasil.</td></tr>
+</table>
+<p>Keduanya merupakan fungsi bawaan, sehingga tidak perlu memasang library tambahan untuk menggunakannya.</p>
+
+<h2 id="s2">2. Output dengan <code>print()</code></h2>
+<p><code>print()</code> adalah fungsi bawaan Python yang digunakan untuk mengeluarkan informasi ke suatu output, yang secara default berupa terminal atau konsol.</p>
+
+<h3 id="s2a">2.1 Contoh paling sederhana</h3>
+<pre><code>print("Halo, dunia!")</code></pre>
+<p>Hasil:</p>
+<pre><code>Halo, dunia!</code></pre>
+<p>Pada pemanggilan ini, <code>print</code> adalah nama fungsi, tanda kurung <code>()</code> menyediakan argumen, dan <code>"Halo, dunia!"</code> adalah string yang ingin ditampilkan. Tanda kutip tidak ikut ditampilkan.</p>
+
+<h3 id="s2b">2.2 Menampilkan nilai variabel</h3>
+<pre><code>nama = "Rian"
+umur = 18
+print(nama)
+print(umur)</code></pre>
+<p>Hasil:</p>
+<pre><code>Rian
+18</code></pre>
+<p>Perhatikan beda antara dua pemanggilan berikut.</p>
+<pre><code>nama = "Rian"
+print(nama)
+print("nama")</code></pre>
+<p>Hasil:</p>
+<pre><code>Rian
+nama</code></pre>
+<p>Pada <code>print(nama)</code>, Python membaca variabel <code>nama</code> lalu menampilkan isinya. Pada <code>print("nama")</code>, Python hanya menampilkan teks literal <code>nama</code>.</p>
+
+<h3 id="s2c">2.3 Menampilkan beberapa nilai sekaligus</h3>
+<pre><code>nama = "Rian"
+umur = 18
+kota = "Banda Aceh"
+print(nama, umur, kota)</code></pre>
+<p>Hasil:</p>
+<pre><code>Rian 18 Banda Aceh</code></pre>
+<p>Secara default, <code>print()</code> memberikan satu spasi pada jarak antar argumen dan menambahkan baris baru setelah output selesai. Kedua perilaku ini dapat diubah menggunakan parameter <code>sep</code> dan <code>end</code>.</p>
+
+<h3 id="s2d">2.4 Menampilkan informasi yang terstruktur</h3>
+<pre><code>nama = "Rian"
+umur = 18
+kota = "Banda Aceh"
+
+print("Nama:", nama)
+print("Umur:", umur)
+print("Kota:", kota)</code></pre>
+<p>Hasil:</p>
+<pre><code>Nama: Rian
+Umur: 18
+Kota: Banda Aceh</code></pre>
+<p>Pola ini berguna untuk menampilkan informasi yang terdiri dari label dan nilainya.</p>
+
+<h2 id="s3">3. f-string untuk output dinamis</h2>
+<p>f-string adalah cara praktis untuk memasukkan nilai variabel atau ekspresi Python ke dalam string. Pada f-string, huruf <code>f</code> diletakkan sebelum tanda kutip, sedangkan nilai yang ingin dimasukkan ditulis di dalam kurung kurawal.</p>
+<pre><code>nama = "Rian"
+umur = 18
+print(f"Halo, nama saya {nama}.")
+print(f"Saya berumur {umur} tahun.")</code></pre>
+<p>Hasil:</p>
+<pre><code>Halo, nama saya Rian.
+Saya berumur 18 tahun.</code></pre>
+<p>Tiga hal penting pada f-string:</p>
+<ul>
+  <li>tanda <code>f</code> ditulis sebelum tanda kutip;</li>
+  <li><code>{nama}</code> menentukan tempat nilai variabel dimasukkan;</li>
+  <li>Python mengonversi nilai variabel ke representasi teks secara otomatis.</li>
+</ul>
+
+<h3 id="s3a">3.1 f-string untuk laporan</h3>
+<pre><code>nama_barang = "Keyboard"
+harga = 150000
+jumlah = 2
+total = harga * jumlah
+
+print(f"Barang: {nama_barang}")
+print(f"Harga satuan: Rp{harga}")
+print(f"Jumlah: {jumlah}")
+print(f"Total pembayaran: Rp{total}")</code></pre>
+<p>Hasil:</p>
+<pre><code>Barang: Keyboard
+Harga satuan: Rp150000
+Jumlah: 2
+Total pembayaran: Rp300000
+</code></pre>
+<h3 id="s3b">3.2 f-string dengan ekspresi</h3>
+<pre><code>a = 10
+b = 5
+print(f"Hasil penjumlahan: {a + b}")</code></pre>
+<p>Hasil:</p>
+<pre><code>Hasil penjumlahan: 15</code></pre>
+
+<h2 id="s4">4. Input dengan input()</h2>
+<p>Fungsi input() adalah fungsi bawaan Python untuk menerima masukan dari pengguna, biasanya melalui keyboard.</p>
+
+<h3 id="s4a">4.1 Dengan dan tanpa input</h3>
+<p>Tanpa input(), nilai harus ditentukan langsung di kode:</p>
+<pre><code>nama = "Rian"
+print(f"Halo, {nama}!")</code></pre>
+<p>Program ini selalu menggunakan nama Rian kecuali kode diubah.</p>
+<p>Dengan input(), program dapat menerima berbagai nama tanpa menyunting kode setiap kali dijalankan:</p>
+<pre><code>nama = input("Masukkan nama: ")
+print(f"Halo, {nama}!")</code></pre>
+<p>Ketika dijalankan, program menampilkan:</p>
+<pre><code>Masukkan nama: </code></pre>
+<p>Pengguna lalu mengetik:</p>
+<pre><code>Rian
+</code></pre>
+<p>Setelah Enter ditekan, hasilnya:</p>
+<pre><code>Halo, Rian!</code></pre>
+<p>Jika masukan berbeda, misalnya Andi, hasil program juga berubah.</p>
+
+<h3 id="s4b">4.2 Membongkar baris input</h3>
+<pre><code>nama = input("Masukkan nama: ")
+</code></pre>
+<p>Beberapa bagian dari baris tersebut memiliki fungsi berikut.</p>
+<table>
+  <tr><th>Bagian kode</th><th>Fungsi</th></tr>
+  <tr><td><code>nama</code></td><td>Variabel untuk menyimpan data yang diterima.</td></tr>
+  <tr><td><code>=</code></td><td>Menyimpan hasil ke variabel.</td></tr>
+  <tr><td><code>input()</code></td><td>Meminta dan menerima masukan pengguna.</td></tr>
+  <tr><td><code>"Masukkan nama: "</code></td><td>Pesan yang ditampilkan sebelum pengguna mengetik.</td></tr>
+</table>
+<p>Urutan kejadiannya:</p>
+<pre><code>input("Masukkan nama: ")
+              ↓
+Pesan ditampilkan
+              ↓
+Pengguna mengetik Rian
+              ↓
+Pengguna menekan Enter
+              ↓
+input() menghasilkan string "Rian"
+              ↓
+Variabel nama menyimpan nilai itu
+</code></pre>
+
+<h3 id="s4c">4.3 input() tanpa disimpan</h3>
+<p>input() menghasilkan nilai. Jika hasilnya tidak disimpan ke variabel, masukan itu tidak tersedia lagi.</p>
+<pre><code>input("Masukkan nama: ")
+</code></pre>
+<p>Praktik yang umum adalah menyimpannya:</p>
+<pre><code>nama = input("Masukkan nama: ")
+</code></pre>
+<p>Gunakan nilai itu berulang kali selama masih dalam cakupan program.</p>
+
+<h2 id="s5">5. Hasil input() selalu string</h2>
+<p>Secara normal, input() menghasilkan nilai bertipe str, sekalipun pengguna mengetik angka.</p>
+<pre><code>umur = input("Masukkan umur: ")
+print(umur)
+print(type(umur))
+</code></pre>
+<p>Misalnya pengguna mengetik 18, outputnya:</p>
+<pre><code>18
+<class 'str'></code></pre>
+<p>Mengapa tipenya str? Karena Python membaca masukan sebagai teks. Python tidak otomatis menyimpulkan bahwa teks 18 harus menjadi integer. Dengan kata lain:</p>
+<pre><code>"18" → string
+
+</code></pre>
+<h3 id="s5a">5.1 Masalah ketika menghitung input angka</h3>
+<p>Misalnya program menanyakan umur lalu menambah 1:</p>
+<pre><code>umur = input("Masukkan umur: ")
+hasil = umur + 1
+print(hasil)
+</code></pre>
+<p>Jika pengguna memasukkan 18, program memunculkan TypeError karena tidak bisa menjumlahkan string dengan integer pada baris <code>hasil = umur + 1</code>.</p>
+<p>Makna singkatnya: variabel <code>umur</code> bertipe string, sedangkan <code>1</code> bertipe integer, sedangkan operator <code>+</code> membutuhkan tipe yang saling mendukung.</p>
+
+<h3 id="s5b">5.2 Solusi: konversi tipe data</h3>
+<p>Gunakan int() untuk mengonversi teks angka menjadi integer.</p>
+<pre><code>umur = int(input("Masukkan umur: "))
+hasil = umur + 1
+print(hasil)
+</code></pre>
+<p>Jika pengguna memasukkan 18, hasilnya:</p>
+<pre><code>Masukkan umur: 18
+19
+</code></pre>
+<p>Urutan kejadian:</p>
+<ol>
+  <li><code>input()</code> menerima jawaban sebagai string.</li>
+  <li><code>int()</code> mengonversi string itu menjadi integer jika isinya valid.</li>
+  <li>Hasil konversi disimpan di variabel <code>umur</code>.</li>
+</ol>
+<p>Secara sederhana:</p>
+<pre><code>"18"    → string
+  ↓ int()
+18      → integer
+  ↓ + 1
+19      → integer
+</code></pre>
+<h2 id="s6">6. Mengubah input menjadi tipe data yang sesuai</h2>
+
+<h3 id="s6a">6.1 Input angka bulat dengan int()</h3>
+<p>Gunakan int() untuk bilangan bulat.</p>
+<pre><code>umur = int(input("Masukkan umur: "))
+jumlah_barang = int(input("Jumlah barang: "))
+print(f"Umur: {umur}")
+print(f"Jumlah barang: {jumlah_barang}")
+</code></pre>
+<h3 id="s6b">6.2 Input angka desimal dengan float()</h3>
+<p>Untuk bilangan desimal, gunakan float().</p>
+<pre><code>tinggi = float(input("Masukkan tinggi badan dalam cm: "))
+print(f"Tinggi badan: {tinggi} cm")
+</code></pre>
+<p>Pemisah desimal yang umum digunakan dalam Python adalah titik, sehingga masukan ditulis 170.5, bukan 170,5.</p>
+
+<h3 id="s6c">6.3 Input teks dengan str()</h3>
+<p>input() sudah menghasilkan string, sehingga konversi dengan str() biasanya tidak diperlukan.</p>
+<pre><code>nama = input("Masukkan nama: ")
+</code></pre>
+<h3 id="s6d">6.4 Tentang bool()</h3>
+<p>Python memiliki fungsi bool(), tetapi penggunaannya untuk mengubah input teks menjadi jawaban ya atau tidak dapat membingungkan pemula.</p>
+<pre><code>jawaban = input("Status mahasiswa (ya/tidak): ")
+status = bool(jawaban)
+print(status)
+</code></pre>
+<p>Jika pengguna mengetik tidak, hasilnya tetap True, karena string yang tidak kosong dianggap benar oleh bool().</p>
+<p>Untuk saat ini, simpan jawaban pengguna sebagai string:</p>
+<pre><code>jawaban = input("Status mahasiswa (ya/tidak): ")
+print(jawaban)
+</code></pre>
+<h2 id="s7">7. Menerima banyak input dalam satu program</h2>
+<pre><code>nama = input("Nama: ")
+umur = int(input("Umur: "))
+kota = input("Asal kota: ")
+
+print("\n=== DATA PENGGUNA ===")
+print(f"Nama : {nama}")
+print(f"Umur : {umur} tahun")
+print(f"Kota : {kota}")
+</code></pre>
+<p>Contoh interaksi:</p>
+<pre><code>Nama: Rian
+Umur: 18
+Asal kota: Banda Aceh
+
+=== DATA PENGGUNA ===
+Nama : Rian
+Umur : 18 tahun
+Kota : Banda Aceh
+</code></pre>
+<p>Python mengeksekusi instruksi secara berurutan dari atas ke bawah, kecuali ada struktur program lain yang mengubah alurnya.</p>
+
+<h2 id="s8">8. Parameter sep pada print()</h2>
+<p>Secara default, ketika beberapa nilai ditampilkan sekaligus, print() memisahkannya dengan spasi.</p>
+<p>Parameter sep menentukan string pemisah antarnilai.</p>
+<pre><code>print("Python", "Java", "C++", sep=" | ")
+print(1, 2, 3, sep="-")
+print("A", "B", "C", sep=", ")
+</code></pre>
+<p>Hasil:</p>
+<pre><code>Python | Java | C++
+1-2-3
+A, B, C
+</code></pre>
+<p>Python menempatkan nilai sep di antara argumen yang ditampilkan. Argumen sep harus berupa string.</p>
+
+<h2 id="s9">9. Parameter end pada print()</h2>
+<p>Secara default, setiap pemanggilan print() mengakhiri output dengan karakter baris baru.</p>
+<pre><code>print("Halo")
+print("Rian")
+</code></pre>
+<p>Hasil:</p>
+<pre><code>Halo
+Rian
+</code></pre>
+<p>Parameter end mengubah perilaku tersebut.</p>
+<pre><code>print("Halo", end=" ")
+print("Rian")
+</code></pre>
+<p>Hasil:</p>
+<pre><code>Halo Rian
+</code></pre>
+  <h2 id="s10">10. Catatan penting</h2>
+  <p>Ada beberapa hal yang perlu diingat dari bab ini.</p>
+  <ul>
+    <li><code>print()</code> menampilkan output, secara default ke terminal atau konsol.</li>
+    <li><code>input()</code> selalu menghasilkan nilai bertipe <code>str</code>.</li>
+    <li>Untuk menghitung nilai yang dimasukkan pengguna, konversi dulu dengan <code>int()</code> atau <code>float()</code>.</li>
+    <li>Parameter <code>sep</code> mengatur pemisah antarnilai, sedangkan <code>end</code> mengatur karakter di akhir output.</li>
+    <li>f-string menggabungkan teks dan nilai variabel di dalam satu kalimat dengan lebih ringkas.</li>
+  </ul>
+
+  <footer>
+    <p class="eyebrow">Sumber</p>
+    <a href="https://docs.python.org/3/tutorial/inputoutput.html">Python Documentation — An Informal Introduction to Python (Input and Output)</a>
+    <a href="https://docs.python.org/3/library/functions.html#print">Python Documentation — print()</a>
+    <a href="https://docs.python.org/3/library/functions.html#input">Python Documentation — input()</a>
+    <a href="https://docs.python.org/3/library/stdtypes.html#numeric-types-int-float-complex">Python Documentation — Numeric types</a>
+    <a href="https://realpython.com/python-f-strings/">Real Python — An Introduction to f-strings</a>
+    <a href="https://realpython.com/python-input-output/">Real Python — Understanding the input() Function</a>
+  </footer>
+</div>
+<script>
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById('theme');
+    var glyph = btn.querySelector('span');
+
+    function isDark() {
+      var set = root.getAttribute('data-theme');
+      if (set) return set === 'dark';
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+
+    function paint() { glyph.textContent = isDark() ? '\u263E' : '\u2600'; }
+
+    btn.addEventListener('click', function () {
+      root.setAttribute('data-theme', isDark() ? 'light' : 'dark');
+      try { localStorage.setItem('theme', root.getAttribute('data-theme')); } catch (e) {}
+      paint();
+    });
+
+    paint();
+  })();
+</script>
+</body>
+</html>

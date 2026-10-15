@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<title>Bab 4: Operator Perbandingan, Boolean, dan Percabangan</title>
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #F8FAFC;
+    --surface: #FFFFFF;
+    --surface-hover: #F1F5F9;
+    --heading: #0F172A;
+    --text: #334155;
+    --muted: #64748B;
+    --faint: #94A3B8;
+    --accent: #4F46E5;
+    --gold: #D99A16;
+    --border: #E2E8F0;
+    --success: #16A34A;
+    --code-bg: #0F172A;
+    --code-text: #E2E8F0;
+    --glow-1: rgba(79, 70, 229, .10);
+    --glow-2: rgba(217, 154, 22, .07);
+    --warn-bg: #FFFBEB;
+    --warn-border: #D99A16;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #0B0F19;
+      --surface: #111827;
+      --surface-hover: #182235;
+      --heading: #F8FAFC;
+      --text: #CBD5E1;
+      --muted: #94A3B8;
+      --faint: #64748B;
+      --accent: #818CF8;
+      --gold: #F5C451;
+      --border: #263244;
+      --success: #4ADE80;
+      --code-bg: #0A0F1C;
+      --code-text: #CBD5E1;
+      --glow-1: rgba(79, 70, 229, .16);
+      --glow-2: rgba(245, 196, 81, .06);
+      --warn-bg: #1A1608;
+      --warn-border: #F5C451;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0B0F19;
+    --surface: #111827;
+    --surface-hover: #182235;
+    --heading: #F8FAFC;
+    --text: #CBD5E1;
+    --muted: #94A3B8;
+    --faint: #64748B;
+    --accent: #818CF8;
+    --gold: #F5C451;
+    --border: #263244;
+    --success: #4ADE80;
+    --code-bg: #0A0F1C;
+    --code-text: #CBD5E1;
+    --glow-1: rgba(79, 70, 229, .16);
+    --glow-2: rgba(245, 196, 81, .06);
+    --warn-bg: #1A1608;
+    --warn-border: #F5C451;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background:
+      radial-gradient(circle at 10% 0%, var(--glow-1), transparent 38%),
+      radial-gradient(circle at 92% 8%, var(--glow-2), transparent 30%),
+      var(--bg);
+    background-repeat: no-repeat;
+    color: var(--text);
+    font-family: ui-sans-serif, system-ui, 'Segoe UI', sans-serif;
+    line-height: 1.75;
+  }
+  .wrap { max-width: 780px; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
+  header.hero { margin-bottom: 3rem; border-bottom: 1px solid var(--border); padding-bottom: 2rem; }
+  .eyebrow { font-family: ui-monospace, monospace; font-size: .75rem; letter-spacing: .2em; text-transform: uppercase; color: var(--accent); margin: 0 0 .9rem; }
+  .rule { width: 2.5rem; height: 2px; background: var(--gold); margin: 0 0 1.1rem; }
+  h1 { font-size: 2.25rem; line-height: 1.2; margin: 0 0 .75rem; letter-spacing: -.02em; color: var(--heading); }
+  h2 { font-size: 1.4rem; margin-top: 3rem; letter-spacing: -.01em; scroll-margin-top: 1.5rem; color: var(--heading); }
+  h3 { font-size: 1.05rem; margin-top: 2rem; }
+  p { color: var(--muted); }
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: .95rem; }
+  th, td { text-align: left; padding: .6rem .8rem; border-bottom: 1px solid var(--border); }
+  th { color: var(--text); }
+  code { font-family: ui-monospace, 'Cascadia Code', monospace; font-size: .85em; background: var(--surface); border: 1px solid var(--border); padding: .15em .4em; border-radius: 6px; }
+  pre { background: var(--code-bg); color: var(--code-text); padding: 1.2rem 1.4rem; border-radius: 10px; overflow-x: auto; font-size: .88rem; line-height: 1.6; }
+  pre code { background: none; border: none; padding: 0; color: inherit; }
+  a { color: var(--accent); }
+  blockquote { border-left: 3px solid var(--accent); margin: 1.5rem 0; padding: .5rem 1rem; background: var(--surface); border-radius: 0 8px 8px 0; }
+  blockquote p { margin: 0; color: var(--text); }
+  ul, ol { color: var(--muted); }
+  li { margin-bottom: .35rem; }
+  .box { border: 1px solid var(--border); border-left: 3px solid var(--warn-border); background: var(--warn-bg); padding: .9rem 1.1rem; border-radius: 0 8px 8px 0; margin: 1.5rem 0; }
+  .box p { margin: 0 0 .5rem; color: var(--text); }
+  .box p:last-child { margin-bottom: 0; }
+  .box strong { color: var(--text); }
+  .toc {
+    position: fixed;
+    top: 1.5rem;
+    left: 1.5rem;
+    width: 230px;
+    max-height: calc(100vh - 3rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    font-size: .8rem;
+    display: none;
+    scrollbar-width: thin;
+    scrollbar-color: var(--muted) transparent;
+  }
+  .toc::-webkit-scrollbar { width: 5px; }
+  .toc::-webkit-scrollbar-track { background: transparent; }
+  .toc::-webkit-scrollbar-thumb { background: var(--muted); opacity: .35; border-radius: 3px; }
+  .toc::-webkit-scrollbar-thumb:hover { opacity: .6; }
+  @media (min-width: 1280px) { .toc { display: block; } }
+  .toc a { color: var(--muted); text-decoration: none; display: block; padding: .15rem 0; }
+  .toc a:hover { color: var(--accent); }
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; margin-bottom: 2.5rem; }
+  .theme-toggle {
+    flex: none;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: grid;
+    place-items: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: color .18s ease, border-color .18s ease, transform .18s cubic-bezier(.16,1,.3,1);
+  }
+  .theme-toggle:hover { color: var(--accent); border-color: var(--accent); transform: translateY(-1px); }
+  .theme-toggle:active { transform: translateY(0) scale(.96); }
+  .theme-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) {
+    .theme-toggle { transition: none; }
+    .theme-toggle:hover { transform: none; }
+  }
+
+  /* Kutipan pembuka: muncul dan tersorot saat halaman baru dimuat */
+  .quote-highlight {
+    margin: 0 0 2.5rem;
+    padding: 1.5rem 1.6rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    background: var(--surface);
+    text-align: center;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: quote-masuk .9s cubic-bezier(.16, 1, .3, 1) .15s forwards;
+  }
+  .quote-highlight span {
+    display: inline-block;
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: .01em;
+    color: var(--text);
+    background: linear-gradient(90deg, transparent, var(--primary-soft), transparent);
+    background-repeat: no-repeat;
+    background-size: 0% 100%;
+    padding: .3rem 0;
+    animation: quote-sorot 4.2s ease-in-out 1.1s infinite;
+  }
+  @keyframes quote-masuk {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes quote-sorot {
+    0%, 100% { background-size: 0% 100%; }
+    50%      { background-size: 100% 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .quote-highlight { opacity: 1; transform: none; animation: none; }
+    .quote-highlight span { background-size: 100% 100%; animation: none; }
+  }
+
+  footer { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); font-size: .9rem; }
+  footer a { display: block; padding: .2rem 0; }
+</style>
+</head>
+<body>
+<nav class="toc">
+  <p class="eyebrow">Daftar Isi</p>
+  <a href="#s1">1. Apa itu kondisi?</a>
+  <a href="#s2">2. Mengapa perlu kondisi</a>
+  <a href="#s3">3. Operator perbandingan</a>
+  <a href="#s4">4. Operator ==</a>
+  <a href="#s5">5. Operator !=</a>
+  <a href="#s6">6. Operator &gt;</a>
+  <a href="#s10">10. = dan ==</a>
+  <a href="#s11">11. Boolean</a>
+  <a href="#s15">15. Struktur if</a>
+  <a href="#s16">16. Indentasi</a>
+  <a href="#s17">17. else</a>
+  <a href="#s18">18. elif</a>
+  <a href="#s20">20. Operator and</a>
+  <a href="#s21">21. Operator or</a>
+  <a href="#s22">22. Operator not</a>
+  <a href="#s23">23. Nilai benar dan salah</a>
+  <a href="#s24">24. Perbandingan bertingkat</a>
+  <a href="#s25">25. Pemeriksaan None</a>
+  <a href="#s26">26. input dan kondisi</a>
+  <a href="#s27">27. Nilai huruf</a>
+  <a href="#s28">28. Status stok</a>
+  <a href="#s29">29. Kesalahan umum</a>
+  <a href="#s30">30. Latihan</a>
+  <a href="#s31">31. Program lengkap</a>
+  <a href="#s32">32. Ringkasan</a>
+</nav>
+
+<div class="wrap">
+  <div class="topbar">
+    <a href="../index.html" style="font-family: ui-monospace, monospace; font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; color: var(--muted);">&#8592; Daftar bab</a>
+    <button class="theme-toggle" id="theme" type="button" aria-label="Ganti tema terang atau gelap"><span aria-hidden="true">&#9788;</span></button>
+  </div>
+  <header class="hero">
+    <p class="eyebrow">Catatan Belajar</p>
+    <div class="rule"></div>
+    <h1>Bab 4: Operator Perbandingan, Boolean, dan Percabangan</h1>
+    <p>Pada bab sebelumnya, program menerima masukan dan menampilkan hasilnya. Bab ini membahas cara program memeriksa kondisi, lalu memilih tindakan yang sesuai menggunakan operator perbandingan, nilai Boolean, serta percabangan <code>if</code>, <code>elif</code>, dan <code>else</code>.</p>
+  </header>
+
+  <div class="quote-highlight">
+    <span>Banyak cara untuk menuju satu tujuan</span>
+  </div>
+
+  <div class="box">
+    <p><strong>Catatan versi.</strong> Catatan ini mengacu pada <strong>Python 3.14.x</strong>. Nama fungsi dan pesan kesalahan pada versi yang lebih baru dapat sedikit berbeda.</p>
+  </div>
+
+  <h2 id="s0">Tujuan pembelajaran</h2>
+  <p>Setelah menyelesaikan bab ini, kemampuan berikut dapat dipraktikkan langsung.</p>
+  <ul>
+    <li>Memahami operator perbandingan seperti <code>==</code>, <code>!=</code>, <code>&gt;</code>, dan <code>&lt;=</code>.</li>
+    <li>Memahami tipe data Boolean, yaitu <code>True</code> dan <code>False</code>.</li>
+    <li>Menggabungkan kondisi dengan <code>and</code>, <code>or</code>, dan <code>not</code>.</li>
+    <li>Menulis percabangan <code>if</code>, <code>elif</code>, dan <code>else</code>.</li>
+    <li>Menggabungkan <code>input()</code> dengan kondisi untuk membuat program interaktif.</li>
+    <li>Memahami kesalahan umum dalam penulisan kondisi.</li>
+    <li>Membuat program sederhana yang mampu mengambil keputusan.</li>
+  </ul>
+
+<h2 id="s1">1. Apa itu kondisi?</h2>
+  <p>Kondisi adalah pernyataan atau ekspresi yang dipakai untuk memeriksa apakah sesuatu bernilai benar atau salah.</p>
+  <p>Dalam kehidupan sehari-hari, keputusan seperti ini diambil berkali-kali. Contohnya, ketika keluar rumah.</p>
+  <blockquote><p>Jika hujan turun, payung dibawa.</p></blockquote>
+  <p>Logika tersebut dapat dituliskan lebih tegas:</p>
+  <pre><code>Kondisi: Apakah sedang hujan?
+
+Jika YA:
+    Bawa payung
+
+Jika TIDAK:
+    Tidak perlu membawa payung</code></pre>
+  <p>Dalam Python, logika itu direpresentasikan oleh variabel Boolean:</p>
+  <pre><code>hujan = True
+if hujan:
+    print("Bawa payung")</code></pre>
+  <p>Hasil:</p>
+  <pre><code>Bawa payung</code></pre>
+  <p>Karena variabel <code>hujan</code> bernilai <code>True</code>, perintah di dalam blok tersebut dijalankan.</p>
+  <p>Kondisi membuat program tidak harus menjalankan seluruh instruksi dengan cara yang sama setiap kali. Program dapat memilih tindakan sesuai dengan data yang diperiksa. Inilah yang disebut <strong>alur kendali</strong>.</p>
+
+  <h2 id="s2">2. Mengapa program membutuhkan kondisi?</h2>
+  <p>Perhatikan program sederhana berikut.</p>
+  <pre><code>nilai = 80
+print(f"Nilai: {nilai}")</code></pre>
+  <p>Hasil:</p>
+  <pre><code>Nilai: 80</code></pre>
+  <p>Program tersebut hanya menampilkan data. Untuk menentukan kelulusan, diperlukan aturan berikut.</p>
+  <ul>
+    <li>nilai 60 atau lebih berarti lulus;</li>
+    <li>nilai di bawah 60 berarti belum lulus.</li>
+  </ul>
+  <p>Aturan itu diterjemahkan menjadi kondisi:</p>
+  <pre><code>nilai = 80
+if nilai >= 60:
+    print("Lulus")
+else:
+    print("Belum lulus")</code></pre>
+  <p>Hasil:</p>
+  <pre><code>Lulus</code></pre>
+  <p>Program sekarang tidak sekadar menampilkan data, tetapi mengolahnya menjadi keputusan.</p>
+
+  <h2 id="s3">3. Operator perbandingan</h2>
+  <p>Operator perbandingan membandingkan dua nilai. Hasil perbandingan berupa Boolean, yaitu <code>True</code> atau <code>False</code>.</p>
+  <table class="tight">
+    <tr><th>Operator</th><th>Arti</th><th>Contoh</th><th>Hasil</th></tr>
+    <tr><td><code>==</code></td><td>sama dengan</td><td><code>10 == 10</code></td><td><code>True</code></td></tr>
+    <tr><td><code>!=</code></td><td>tidak sama dengan</td><td><code>10 != 5</code></td><td><code>True</code></td></tr>
+    <tr><td><code>&gt;</code></td><td>lebih besar dari</td><td><code>10 &gt; 5</code></td><td><code>True</code></td></tr>
+    <tr><td><code>&lt;</code></td><td>lebih kecil dari</td><td><code>3 &lt; 8</code></td><td><code>True</code></td></tr>
+    <tr><td><code>&gt;=</code></td><td>lebih besar dari atau sama dengan</td><td><code>10 &gt;= 10</code></td><td><code>True</code></td></tr>
+    <tr><td><code>&lt;=</code></td><td>lebih kecil dari atau sama dengan</td><td><code>5 &lt;= 8</code></td><td><code>True</code></td></tr>
+  </table>
+  <p>Setiap operator dibahas satu per satu pada bagian berikutnya.</p>
+<h2 id="s4">4. Operator <code>==</code> — sama dengan</h2>
+  <p>Operator <code>==</code> memeriksa apakah dua nilai sama.</p>
+  <pre><code>print(10 == 10)
+print(10 == 5)</code></pre>
+  <p>Hasil:</p>
+  <pre><code>True
+False</code></pre>
+  <p>Pada <code>10 == 10</code>, kedua nilai sama sehingga hasilnya <code>True</code>. Pada <code>10 == 5</code>, keduanya berbeda sehingga hasilnya <code>False</code>.</p>
+  <p>Operator ini juga dapat membandingkan dua variabel:</p>
+  <pre><code>first_value = 20
+second_value = 20
+print(first_value == second_value)</code></pre>
+  <p>Hasil:</p>
+  <pre><code>True</code></pre>
+
+  <h2 id="s5">5. Operator <code>!=</code> — tidak sama dengan</h2>
+  <p>Operator <code>!=</code> memeriksa apakah dua nilai berbeda.</p>
+  <pre><code>print(10 != 5)
+print(10 != 10)</code></pre>
+  <p>Hasil:</p>
+  <pre><code>True
+False</code></pre>
+  <p><code>10 != 5</code> bernilai <code>True</code> karena kedua angka berbeda. <code>10 != 10</code> bernilai <code>False</code> karena keduanya sama.</p>
+  <p>Contoh penerapan:</p>
+  <pre><code>password = "python123"
+if password != "admin123":
+    print("Akses ditolak")</code></pre>
+  <p>Karena nilai <code>password</code> berbeda dari <code>admin123</code>, kondisi bernilai <code>True</code> dan pesan ditampilkan.</p>
+
+  <h2 id="s6">6. Operator <code>&gt;</code> — lebih besar dari</h2>
+  <pre><code>print(10 > 5)
+print(5 > 10)</code></pre>
+  <p>Hasil:</p>
+  <pre><code>True
+False</code></pre>
+  <p>Contoh penggunaan:</p>
+  <pre><code>saldo = 50000
+print(saldo > 10000)</code></pre>
+  <p>Hasil:</p>
+  <pre><code>True</code></pre>
+  <p>Saldo 50.000 lebih besar daripada 10.000. Perhatikan perbedaan berikut.</p>
+  <pre><code>print(10 > 10)</code></pre>
+  <p>Hasilnya <code>False</code>, bukan <code>True</code>, karena operator <code>&gt;</code> tidak memasukkan nilai yang sama.</p>
+<h2 id="s7">7. Operator <code>&lt;</code> — lebih kecil dari</h2>
+  <pre><code>print(3 < 8)
+print(10 < 5)</code></pre>
+  <p>Hasil:</p>
+  <pre><code>True
+False</code></pre>
+  <p>Contoh penerapan:</p>
+  <pre><code>stock_quantity = 3
+print(stock_quantity < 5)</code></pre>
+  <p>Hasil:</p>
+  <pre><code>True</code></pre>
+  <p>Kondisi tersebut dapat dipakai untuk memeriksa apakah stok barang sudah menipis.</p>
+
+  <h2 id="s8">8. Operator <code>&gt;=</code> — lebih besar dari atau sama dengan</h2>
+  <p>Operator <code>&gt;=</code> berbeda dari <code>&gt;</code> karena juga menerima nilai yang sama.</p>
+  <pre><code>print(10 >= 5)
+print(10 >= 10)
+print(5 >= 10)</code></pre>
+  <p>Hasil:</p>
+  <pre><code>True
+True
+False</code></pre>
+  <p>Contoh aturan kelulusan dengan batas nilai 60:</p>
+  <pre><code>score = 60
+print(score >= 60)</code></pre>
+  <p>Hasil:</p>
+  <pre><code>True</code></pre>
+  <p>Nilai 60 tetap memenuhi syarat karena batas tersebut termasuk dalam perbandingan.</p>
+
+  <h2 id="s9">9. Operator <code>&lt;=</code> — lebih kecil dari atau sama dengan</h2>
+  <pre><code>print(5 <= 10)
+print(10 <= 10)
+print(15 <= 10)</code></pre>
+  <p>Hasil:</p>
+  <pre><code>True
+True
+False</code></pre>
+  <p>Contoh penerapan:</p>
+  <pre><code>user_age = 17
+print(user_age <= 17)</code></pre>
+  <p>Hasil:</p>
+  <pre><code>True</code></pre>
+
+  <h2 id="s10">10. Perbedaan penting antara <code>=</code> dan <code>==</code></h2>
+  <p>Selisih satu tanda sama dengan adalah penyebab kesalahan yang paling sering terjadi pada pemula.</p>
+  <h3 id="s10a">10.1 Penugasan memakai <code>=</code></h3>
+  <pre><code>user_age = 18</code></pre>
+  <p>Makna baris tersebut: nilai <code>18</code> diberikan kepada variabel <code>user_age</code>.</p>
+  <h3 id="s10b">10.2 Perbandingan memakai <code>==</code></h3>
+  <pre><code>user_age == 18</code></pre>
+  <p>Makna baris tersebut: diperiksa apakah nilai <code>user_age</code> sama dengan <code>18</code>.</p>
+  <table class="tight">
+    <tr><th>Kode</th><th>Makna</th></tr>
+    <tr><td><code>score = 80</code></td><td>menyimpan nilai 80 ke variabel</td></tr>
+    <tr><td><code>score == 80</code></td><td>memeriksa apakah nilai sama dengan 80</td></tr>
+    <tr><td><code>score &gt;= 60</code></td><td>memeriksa apakah nilai setidaknya 60</td></tr>
+    <tr><td><code>score != 0</code></td><td>memeriksa apakah nilai bukan 0</td></tr>
+  </table>
+  <p>Contoh lengkap:</p>
+  <pre><code>score = 80
+print(score == 80)
+print(score == 60)
+print(score >= 60)</code></pre>
+  <p>Hasil:</p>
+  <pre><code>True
+False
+True</code></pre>
+  <p>Jadi <code>=</code> memberikan nilai, sedangkan <code>==</code> membandingkan nilai.</p>
+  <pre><code>score = 80
+if score = 80:
+    print("Nilai 80")</code></pre>
+  <p>Kode tersebut tidak dapat dijalankan. Satu tanda sama dengan di dalam kondisi ditolak sebagai kesalahan sintaks, karena <code>=</code> hanya dipakai untuk penugasan.</p>
+<h2 id="s11">11. Apa itu Boolean?</h2>
+  <p>Boolean adalah tipe data yang hanya memiliki dua nilai kebenaran:</p>
+  <pre><code>True
+False</code></pre>
+  <p><code>True</code> berarti benar, sedangkan <code>False</code> berarti salah. Python memakai nilai Boolean untuk mewakili hasil kondisi.</p>
+  <pre><code>is_raining = True
+is_hot = False
+
+print(is_raining)
+print(is_hot)</code></pre>
+  <p>Hasil:</p>
+  <pre><code>True
+False</code></pre>
+  <p>Perhatikan bahwa <code>True</code> dan <code>False</code> tidak memakai tanda kutip. Penulisan berikut berbeda.</p>
+  <pre><code>is_active = True      # Boolean
+is_active = "True"    # string</code></pre>
+  <p>Nilai pertama bertipe Boolean, sedangkan nilai kedua bertipe string karena ditulis di dalam tanda kutip.</p>
+
+  <h2 id="s12">12. Memeriksa tipe Boolean</h2>
+  <p>Fungsi <code>type()</code> dapat dipakai untuk memastikan tipenya.</p>
+  <pre><code>status = True
+print(type(status))</code></pre>
+  <p>Hasil:</p>
+  <pre><code>&lt;class 'bool'&gt;</code></pre>
+  <p><code>bool</code> adalah nama tipe data Boolean dalam Python.</p>
+
+  <h2 id="s13">13. Operator perbandingan menghasilkan Boolean</h2>
+  <p>Kondisi dapat dihitung lebih dahulu, lalu hasilnya disimpan dalam variabel.</p>
+  <pre><code>user_age = 18
+is_adult = user_age >= 17
+print(is_adult)
+print(type(is_adult))</code></pre>
+  <p>Hasil:</p>
+  <pre><code>True
+&lt;class 'bool'&gt;</code></pre>
+  <p>Prosesnya dapat digambarkan sebagai berikut.</p>
+  <pre><code>user_age = 18
+     ↓
+user_age &gt;= 17
+     ↓
+18 &gt;= 17
+     ↓
+True
+     ↓
+is_adult = True</code></pre>
+  <p>Contoh lain:</p>
+  <pre><code>balance = 5000
+is_enough = balance &gt;= 10000
+print(is_enough)</code></pre>
+  <p>Hasil:</p>
+  <pre><code>False</code></pre>
+  <p>Saldo 5.000 belum mencapai batas 10.000.</p>
+
+  <h2 id="s14">14. Variabel Boolean di dalam kondisi</h2>
+  <p>Variabel Boolean dapat langsung dipakai sebagai kondisi tanpa perbandingan tambahan.</p>
+  <pre><code>is_logged_in = True
+if is_logged_in:
+    print("Selamat datang")</code></pre>
+  <p>Hasil:</p>
+  <pre><code>Selamat datang</code></pre>
+  <p>Bentuk ini lebih ringkas daripada menuliskan perbandingan secara langsung.</p>
+  <pre><code>if is_logged_in == True:
+    print("Selamat datang")</code></pre>
+  <p>Keduanya memberi hasil sama pada contoh tersebut, tetapi bentuk pertama lebih lazim digunakan.</p>
+<h2 id="s15">15. Struktur <code>if</code></h2>
+  <p> Pernyataan <code>if</code> menjalankan suatu blok kode hanya ketika kondisinya bernilai benar.</p>
+  <pre><code>if kondisi:
+    # blok yang berjalan jika kondisi benar</code></pre>
+  <p>Ada dua bagian penting pada bentuk tersebut.</p>
+  <ul>
+    <li><code>if kondisi:</code> memeriksa apakah kondisi bernilai benar.</li>
+    <li>Baris yang menjorok ke bawah adalah blok yang dijalankan ketika kondisi terpenuhi.</li>
+  </ul>
+  <p>Tanda titik dua menandai awal blok, sedangkan indentasi menentukan baris mana yang termasuk ke dalam blok. Konvensi yang umum adalah empat spasi.</p>
+
+  <h3 id="s15a">15.1 Contoh paling sederhana</h3>
+  <pre><code>user_age = 20
+if user_age &gt;= 18:
+    print("Sudah dewasa")</code></pre>
+  <p>Hasil:</p>
+  <pre><code>Sudah dewasa</code></pre>
+  <p>Langkahnya dapat diuraikan sebagai berikut.</p>
+  <p>Pertama, variabel <code>user_age</code> bernilai 20.</p>
+  <pre><code>user_age = 20</code></pre>
+  <p>Kedua, Python memeriksa kondisi.</p>
+  <pre><code>user_age &gt;= 18</code></pre>
+  <p>Secara logika:</p>
+  <pre><code>20 &gt;= 18
+   ↓
+True</code></pre>
+  <p>Ketiga, karena kondisi bernilai <code>True</code>, Python menjalankan <code>print("Sudah dewasa")</code>. Jika nilai <code>user_age</code> diganti menjadi 15, kondisi bernilai <code>False</code> sehingga baris tersebut dilewati.</p>
+
+  <h3 id="s15b">15.2 Contoh ketika kondisi bernilai salah</h3>
+  <pre><code>user_age = 15
+if user_age &gt;= 18:
+    print("Sudah dewasa")
+print("Program selesai")</code></pre>
+  <p>Hasil:</p>
+  <pre><code>Program selesai</code></pre>
+  <p>Pesan pertama tidak muncul karena kondisi berikut menghasilkan <code>False</code>.</p>
+  <pre><code>15 &gt;= 18</code></pre>
+  <p>Python melewati blok <code>if</code> lalu melanjutkan ke baris berikutnya yang berada di luar blok tersebut. Inilah prinsip dasar <code>if</code>: blok hanya berjalan ketika kondisinya benar.</p>
+
+  <h2 id="s16">16. Memahami indentasi</h2>
+  <p>Indentasi adalah jarak ke awal baris kode. Dalam Python, indentasi bukan sekadar tampilan, melainkan bagian dari aturan sintaks. Tanpa indentasi, Python tidak dapat menentukan mana isi blok dan mana yang berada di luar blok.</p>
+  <p>Perhatikan dua kode berikut.</p>
+  <p>Bentuk yang salah:</p>
+  <pre><code>user_age = 20
+if user_age &gt;= 18:
+print("Sudah dewasa")
+print("Boleh mengakses fitur dewasa")
+print("Terima kasih")</code></pre>
+  <p>Baris <code>print("Sudah dewasa")</code> tidak menjorok, sehingga Python menganggap blok <code>if</code> belum memiliki isi dan menghentikan program dengan pesan <code>IndentationError</code>.</p>
+  <p>Bentuk yang benar:</p>
+  <pre><code>user_age = 20
+if user_age &gt;= 18:
+    print("Sudah dewasa")
+    print("Boleh mengakses fitur dewasa")
+print("Terima kasih")</code></pre>
+  <p>Hasil:</p>
+  <pre><code>Sudah dewasa
+Boleh mengakses fitur dewasa
+Terima kasih</code></pre>
+  <p>Kedua baris pertama berada di dalam blok <code>if</code>, sedangkan baris terakhir berada di luar blok sehingga selalu berjalan.</p>
+  <p>Aturan praktis untuk indentasi Python:</p>
+  <ul>
+    <li>gunakan empat spasi untuk satu tingkat indentasi;</li>
+    <li>jangan memakai tab, karena pencampuran tab dan spasi memicu <code>TabError</code>;</li>
+    <li>baris yang menjorok harus selalu diikuti baris sebelumnya yang diakhiri titik dua.</li>
+  </ul>
+<h2 id="s17">17. Menambahkan <code>else</code></h2>
+  <p>Blok <code>else</code> berjalan ketika semua kondisi sebelumnya bernilai salah. Bagian ini bersifat opsional dan hanya boleh satu.</p>
+  <pre><code>user_age = 15
+if user_age &gt;= 18:
+    print("Sudah dewasa")
+else:
+    print("Belum dewasa")</code></pre>
+  <p>Hasil:</p>
+  <pre><code>Belum dewasa</code></pre>
+  <p>Tata letak <code>else</code> selalu sejajar dengan <code>if</code>, bukan menjorok ke dalam bloknya.</p>
+  <pre><code>if kondisi:
+    blok_if
+else:              # sejajar dengan if
+    blok_else</code></pre>
+  <p>Tanpa <code>else</code>, program tetap berjalan, tetapi tidak melakukan apa pun ketika kondisi salah.</p>
+
+  <h2 id="s18">18. Menambahkan <code>elif</code></h2>
+  <p>Ketika terdapat lebih dari dua kemungkinan, <code>elif</code> dipakai untuk menambahkan kondisi tambahan. <code>elif</code> adalah ringkasan dari <code>else if</code> dan dipakai untuk menghindari indentasi yang terlalu dalam.</p>
+  <pre><code>score = 75
+if score &gt;= 90:
+    print("Nilai A")
+elif score &gt;= 80:
+    print("Nilai B")
+elif score &gt;= 60:
+    print("Nilai C")
+else:
+    print("Nilai D")</code></pre>
+  <p>Hasil:</p>
+  <pre><code>Nilai C</code></pre>
+  <p>Python memeriksa kondisi dari atas ke bawah. Dimulai dari <code>score &gt;= 90</code>, nilainya salah, lalu <code>score &gt;= 80</code> juga salah, kemudian <code>score &gt;= 60</code> bernilai benar. Satu blok berjalan, yaitu <code>print("Nilai C")</code>.</p>
+
+  <h2 id="s19">19. Hanya satu blok yang berjalan</h2>
+  <p>Dirantai <code>if</code>, <code>elif</code>, <code>else</code> bersifat berurutan dan saling meniadakan. Begitu satu kondisi bernilai benar, Python berhenti memeriksa kondisi berikutnya.</p>
+  <pre><code>score = 95
+if score &gt;= 90:
+    print("Nilai A")
+elif score &gt;= 80:
+    print("Nilai B")
+elif score &gt;= 60:
+    print("Nilai C")
+else:
+    print("Nilai D")</code></pre>
+  <p>Hasil:</p>
+  <pre><code>Nilai A</code></pre>
+  <p>Hanya <code>Nilai A</code> yang muncul. Kondisi <code>score &gt;= 80</code> memang juga bernilai benar, tetapi tidak diperiksa karena kondisi pertama sudah terpenuhi.</p>
+  <p>Urutan pemeriksaan penting. Jika kondisi yang paling umum diletakkan paling atas, kondisi yang lebih khusus tidak akan pernah diperiksa.</p>
+  <pre><code>score = 95
+
+# penulisan ini salah
+if score &gt;= 60:
+    print("Lulus")
+elif score &gt;= 90:
+    print("Nilai A")</code></pre>
+  <p>Hasil:</p>
+  <pre><code>Lulus</code></pre>
+  <p>Program berhenti pada kondisi pertama sehingga <code>Nilai A</code> tidak pernah muncul. Kondisi yang paling khusus harus diletakkan paling atas.</p>
+  <div class="box">
+    <p><strong>Urutan aturan.</strong> Dalam rantai <code>if</code>, <code>elif</code>, <code>else</code>, pemeriksaan selalu berjalan dari atas ke bawah dan berhenti pada kondisi pertama yang bernilai benar.</p>
+  </div>
+<h2 id="s20">20. Menggabungkan kondisi dengan <code>and</code></h2>
+  <p>Suatu kondisi sering membutuhkan lebih dari satu syarat. Operator <code>and</code> menggabungkan dua kondisi dan hanya bernilai benar bila keduanya benar.</p>
+  <table class="tight">
+    <tr><th>A</th><th>B</th><th><code>A and B</code></th></tr>
+    <tr><td><code>True</code></td><td><code>True</code></td><td><code>True</code></td></tr>
+    <tr><td><code>True</code></td><td><code>False</code></td><td><code>False</code></td></tr>
+    <tr><td><code>False</code></td><td><code>True</code></td><td><code>False</code></td></tr>
+    <tr><td><code>False</code></td><td><code>False</code></td><td><code>False</code></td></tr>
+  </table>
+  <pre><code>print(True and True)
+print(True and False)
+print(False and True)
+print(False and False)</code></pre>
+  <p>Hasil:</p>
+  <pre><code>True
+False
+False
+False</code></pre>
+  <p>Contoh penerapan, syarat untuk diskson:</p>
+  <pre><code>total_price = 250000
+member = True
+
+if total_price &gt;= 200000 and member:
+    print("Mendapat diskon 10 persen")</code></pre>
+  <p>Hasil:</p>
+  <pre><code>Mendapat diskon 10 persen</code></pre>
+  <p>Jika salah satu syarat tidak terpenuhi, diskon tidak diberikan.</p>
+
+  <h2 id="s21">21. Menggabungkan kondisi dengan <code>or</code></h2>
+  <p>Operator <code>or</code> bernilai benar bila salah satu saja bernilai benar.</p>
+  <table class="tight">
+    <tr><th>A</th><th>B</th><th><code>A or B</code></th></tr>
+    <tr><td><code>True</code></td><td><code>True</code></td><td><code>True</code></td></tr>
+    <tr><td><code>True</code></td><td><code>False</code></td><td><code>True</code></td></tr>
+    <tr><td><code>False</code></td><td><code>True</code></td><td><code>True</code></td></tr>
+    <tr><td><code>False</code></td><td><code>False</code></td><td><code>False</code></td></tr>
+  </table>
+  <pre><code>print(False or True)
+print(False or False)</code></pre>
+  <p>Hasil:</p>
+  <pre><code>True
+False</code></pre>
+  <p>Contoh penerapan, hari operasional:</p>
+  <pre><code>day = "Sabtu"
+is_holiday = False
+
+if day == "Sabtu" or day == "Minggu" or is_holiday:
+    print("Hari libur")
+else:
+    print("Hari kerja")</code></pre>
+  <p>Hasil:</p>
+  <pre><code>Hari libur</code></pre>
+
+  <h2 id="s22">22. Operator <code>not</code></h2>
+  <p>Operator <code>not</code> membalik nilai kebenaran sebuah kondisi.</p>
+  <pre><code>print(not True)
+print(not False)</code></pre>
+  <p>Hasil:</p>
+  <pre><code>False
+True</code></pre>
+  <p>Contoh penerapan:</p>
+  <pre><code>is_empty = True
+
+if not is_empty:
+    print("Data terisi")
+else:
+    print("Data kosong")</code></pre>
+  <p>Hasil:</p>
+  <pre><code>Data kosong</code></pre>
+  <p>Urutan prioritas operator logika mengikuti urutan berikut.</p>
+  <pre><code>not  &gt;  and  &gt;  or</code></pre>
+  <p>Artinya <code>not</code> dievaluasi lebih dahulu, lalu <code>and</code>, lalu <code>or</code>. Contoh berikut membaca sebagai <code>not (True and False)</code>.</p>
+  <pre><code>print(not True and False)</code></pre>
+  <p>Hasil:</p>
+  <pre><code>False</code></pre>
+<h2 id="s23">23. Nilai yang dianggap benar dan salah</h2>
+  <p>Dalam kondisi, Python tidak hanya menerima <code>True</code> dan <code>False</code>. Nilai lain seperti angka, teks, dan koleksi juga dapat dipakai, lalu dinilai otomatis.</p>
+  <table class="tight">
+    <tr><th>Nilai</th><th>Penilaian</th></tr>
+    <tr><td><code>0</code>, <code>0.0</code></td><td>salah</td></tr>
+    <tr><td><code>""</code> (teks kosong)</td><td>salah</td></tr>
+    <tr><td><code>None</code></td><td>salah</td></tr>
+    <tr><td><code>[]</code>, <code>{}</code>, <code>()</code> (koleksi kosong)</td><td>salah</td></tr>
+    <tr><td><code>False</code></td><td>salah</td></tr>
+    <tr><td>angka selain nol</td><td>benar</td></tr>
+    <tr><td>teks yang tidak kosong</td><td>benar</td></tr>
+    <tr><td>koleksi yang berisi isi</td><td>benar</td></tr>
+  </table>
+  <p>Contoh:</p>
+  <pre><code>print(bool(0))
+print(bool(1))
+print(bool(""))
+print(bool("halo"))
+print(bool([]))
+print(bool([1, 2]))</code></pre>
+  <p>Hasil:</p>
+  <pre><code>False
+True
+False
+True
+False
+True</code></pre>
+  <p>Perhatikan bahwa teks <code>"0"</code> tetap dinilai benar karena isinya bukan kosong.</p>
+  <pre><code>print(bool("0"))</code></pre>
+  <p>Hasil:</p>
+  <pre><code>True</code></pre>
+  <p>Fitur ini membuat pemeriksaan kondisi tetap ringkas.</p>
+  <pre><code>nama = ""
+if nama:
+    print("Nama terisi")
+else:
+    print("Nama belum diisi")</code></pre>
+  <p>Hasil:</p>
+  <pre><code>Nama belum diisi</code></pre>
+
+  <h2 id="s24">24. Perbandingan bertingkat</h2>
+  <p>Python dapat menggabungkan beberapa perbandingan dalam satu baris dengan bentuk <code>awal &lt; nilai &lt; akhir</code>.</p>
+  <pre><code>score = 75
+print(0 &lt;= score &lt;= 100)</code></pre>
+  <p>Hasil:</p>
+  <pre><code>True</code></pre>
+  <p>Bentuk tersebut setara dengan menuliskan dua perbandingan sekaligus.</p>
+  <pre><code>print(0 &lt;= score and score &lt;= 100)</code></pre>
+  <p>Hasil tetap <code>True</code>. Penulisan bertingkat lebih mudah dibaca.</p>
+  <pre><code>score = 120
+print(0 &lt;= score &lt;= 100)</code></pre>
+  <p>Hasil:</p>
+  <pre><code>False</code></pre>
+  <p>Kesalahan yang perlu dihindari adalah menaruh tanda perbandingan di posisi yang salah.</p>
+  <pre><code>score = 75
+print(0 &lt;= score and &lt;= 100)</code></pre>
+  <p>Baris tersebut ditolak sebagai kesalahan sintaks karena tanda <code>&lt;=</code> tidak memiliki nilai di sebelah kirinya.</p>
+  <p>Bentuk yang benar tetap memisahkan kedua batas secara lengkap.</p>
+  <pre><code>score = 75
+print(0 &lt;= score and score &lt;= 100)</code></pre>
+  <p>Hasil:</p>
+  <pre><code>True</code></pre>
+
+  <h2 id="s25">25. Pemeriksaan <code>None</code> memakai <code>is</code></h2>
+  <p><code>None</code> menandakan bahwa tidak ada nilai. Untuk memeriksa <code>None</code>, operator <code>is</code> dipakai, bukan <code>==</code>.</p>
+  <pre><code>result = None
+if result is None:
+    print("Belum ada hasil")</code></pre>
+  <p>Hasil:</p>
+  <pre><code>Belum ada hasil</code></pre>
+  <p>Operator <code>is</code> memeriksa apakah dua nilai menunjuk objek yang sama, bukan apakah nilainya sama. Untuk builtin sederhana seperti <code>None</code>, <code>True</code>, dan <code>False</code>, bentuk ini selalu berlaku.</p>
+  <div class="box">
+    <p><strong>Aturan praktis.</strong> Gunakan <code>==</code> untuk membandingkan nilai, dan <code>is</code> hanya untuk memeriksa apakah suatu nilai adalah <code>None</code>.</p>
+  </div>
+<h2 id="s26">26. Gabungan <code>input()</code> dan kondisi</h2>
+  <p>Percabangan menjadi lengkap ketika dikombinasikan dengan masukan pengguna. Hasil <code>input()</code> selalu berupa string, sehingga perlu dikonversi sebelum dibandingkan dengan angka.</p>
+  <pre><code>name = input("Masukkan nama: ")
+score = int(input("Masukkan nilai: "))
+
+if score &gt;= 60:
+    result = "lulus"
+else:
+    result = "belum lulus"
+
+print(f"Nama  : {name}")
+print(f"Nilai : {score}")
+print(f"Hasil : {result}")</code></pre>
+  <p>Contoh interaksi:</p>
+  <pre><code>Masukkan nama: Rian
+Masukkan nilai: 75
+Nama  : Rian
+Nilai : 75
+Hasil : lulus</code></pre>
+
+  <h2 id="s27">27. Percabangan bercabang dengan nilai huruf</h2>
+  <p>Contoh yang sering dipakai adalah menentukan nilai huruf dari angka.</p>
+  <pre><code>score = int(input("Masukkan nilai: "))
+
+if score &gt;= 85:
+    grade = "A"
+elif score &gt;= 75:
+    grade = "B"
+elif score &gt;= 65:
+    grade = "C"
+elif score &gt;= 55:
+    grade = "D"
+else:
+    grade = "E"
+
+print(f"Nilai huruf: {grade}")</code></pre>
+  <p>Contoh interaksi:</p>
+  <pre><code>Masukkan nilai: 75
+Nilai huruf: B</code></pre>
+  <p>Konversi <code>int()</code> pada baris kedua penting. Tanpa itu, perbandingan <code>score &gt;= 85</code> membandingkan string dengan integer dan program berhenti dengan kesalahan tipe.</p>
+  <p>Penulisan yang lebih ringkas dapat memakai operator logika.</p>
+  <pre><code>score = int(input("Masukkan nilai: "))
+
+if score &gt;= 85 and score &lt;= 100:
+    grade = "A"
+elif score &gt;= 75 and score &lt; 85:
+    grade = "B"
+else:
+    grade = "Di luar rentang A dan B"
+
+print(grade)</code></pre>
+  <p>Contoh interaksi:</p>
+  <pre><code>Masukkan nilai: 90
+A</code></pre>
+
+  <h2 id="s28">28. Menentukan status keluhan</h2>
+  <p>Program kasir sederhana dapat memakai kondisi bertingkat untuk memeriksa stok.</p>
+  <pre><code>stock = int(input("Jumlah stok: "))
+
+if stock == 0:
+    print("Stok habis")
+elif stock &lt; 5:
+    print("Stok menipis")
+elif stock &lt; 20:
+    print("Stok sedang baik")
+else:
+    print("Stok aman")</code></pre>
+  <table class="tight">
+    <tr><th>Jumlah stok</th><th>Hasil</th></tr>
+    <tr><td>0</td><td>Stok habis</td></tr>
+    <tr><td>1 sampai 4</td><td>Stok menipis</td></tr>
+    <tr><td>5 sampai 19</td><td>Stok sedang baik</td></tr>
+    <tr><td>20 atau lebih</td><td>Stok aman</td></tr>
+  </table>
+  <p>Urutan pemeriksaan dari nilai paling kecil ke terbesar membuat setiap kondisi cukup memakai satu perbandingan.</p>
+  <div class="box">
+    <p>Secara umum, kondisi ditulis dari kasus paling khusus ke kasus paling umum. Dengan begitu, jumlah perbandingan pada setiap baris dapat dikurangi.</p>
+  </div>
+<h2 id="s29">29. Kesalahan umum</h2>
+  <p>Bagian ini merangkum kesalahan yang paling sering muncul saat menulis percabangan.</p>
+
+  <h3 id="s29a">29.1 Lupa titik dua</h3>
+  <pre><code>score = 80
+if score &gt;= 60
+    print("Lulus")</code></pre>
+  <p>Program berhenti dengan kesalahan sintaks karena tanda titik dua setelah kondisi tidak ditulis.</p>
+
+  <h3 id="s29b">29.2 Salah indentasi</h3>
+  <pre><code>score = 80
+if score &gt;= 60:
+print("Lulus")</code></pre>
+  <p>Program berhenti dengan <code>IndentationError</code> karena blok <code>if</code> tidak menjorok.</p>
+
+  <h3 id="s29c">29.3 Mencampur tab dan spasi</h3>
+  <pre><code>score = 80
+if score &gt;= 60:
+    print("Lulus")
+	print("Baris lain")</code></pre>
+  <p>Program berhenti dengan <code>TabError</code>. Gunakan spasi secara konsisten, empat spasi untuk satu tingkat.</p>
+
+  <h3 id="s29d">29.4 Lupa konversi <code>input()</code></h3>
+  <pre><code>score = input("Nilai: ")
+if score &gt;= 60:
+    print("Lulus")</code></pre>
+  <p>Program berhenti dengan kesalahan tipe karena <code>score</code> berupa string. Tambahkan <code>int()</code> atau <code>float()</code>.</p>
+
+  <h3 id="s29e">29.5<code>else</code> ditulis sebelum <code>if</code></h3>
+  <pre><code>score = 80
+else:
+    print("Belum lulus")
+if score &gt;= 60:
+    print("Lulus")</code></pre>
+  <p>Program berhenti dengan kesalahan sintaks karena <code>else</code> harus selalu mengikuti blok <code>if</code>.</p>
+
+  <h2 id="s30">30. Latihan</h2>
+  <p>Kerjakan latihan berikut tanpa melihat contoh sebelumnya lebih dahulu.</p>
+  <ol>
+    <li>Tulis program yang meminta dua angka, kemudian menampilkan pesan <code>lebih besar</code>, <code>sama</code>, atau <code>lebih kecil</code>.</li>
+    <li>Tulis program yang memeriksa apakah sebuah angka genap atau ganjil.</li>
+    <li>Tulis program yang meminta tahun lahir, lalu menampilkan kelompok umur.</li>
+    <li>Tulis program yang memeriksa apakah tiga sisi yang dimasukkan dapat membentuk segitiga.</li>
+    <li>Tulis program yang menampilkan nilai huruf dari 0 sampai 100 beserta keterangan kelulusannya.</li>
+  </ol>
+  <p>Kunci jawaban singkat.</p>
+  <pre><code># 1. Perbandingan tiga nilai
+first_number = float(input("Angka pertama: "))
+second_number = float(input("Angka kedua: "))
+
+if first_number &gt; second_number:
+    print("lebih besar")
+elif first_number == second_number:
+    print("sama")
+else:
+    print("lebih kecil")</code></pre>
+  <pre><code># 2. Genap atau ganjil
+number = int(input("Masukkan angka: "))
+
+if number % 2 == 0:
+    print("Genap")
+else:
+    print("Ganjil")</code></pre>
+  <pre><code># 4. Syarat segitiga
+side_a = float(input("Sisi a: "))
+side_b = float(input("Sisi b: "))
+side_c = float(input("Sisi c: "))
+
+if side_a + side_b &gt; side_c and side_b + side_c &gt; side_a and side_a + side_c &gt; side_b:
+    print("Dapat membentuk segitiga")
+else:
+    print("Tidak dapat membentuk segitiga")</code></pre>
+
+  <h2 id="s31">31. Program lengkap: penentuan nilai</h2>
+  <p>Program berikut menggabungkan masukan pengguna, rantai kondisi, dan operator logika.</p>
+  <pre><code>name = input("Nama     : ")
+score = int(input("Nilai    : "))
+attendance = int(input("Kehadiran: "))
+
+if score &gt;= 60 and attendance &gt;= 75:
+    grade = "A"
+elif score &gt;= 60:
+    grade = "B"
+elif score &gt;= 50:
+    grade = "C"
+else:
+    grade = "D"
+
+print()
+print("=== HASIL ===")
+print(f"Nama      : {name}")
+print(f"Nilai     : {score}")
+print(f"Kehadiran : {attendance}%")
+print(f"Nilai huruf: {grade}")</code></pre>
+  <p>Contoh interaksi:</p>
+  <pre><code>Nama     : Rian
+Nilai    : 78
+Kehadiran: 80
+
+=== HASIL ===
+Nama      : Rian
+Nilai     : 78
+Kehadiran : 80%
+Nilai huruf: B</code></pre>
+  <p>Alur program pada contoh tersebut:</p>
+  <ol>
+    <li>program membaca nama, nilai, dan kehadiran;</li>
+    <li>kondisi pertama diperiksa: nilai 78 lebih dari 60, tetapi kehadiran 80 di bawah 75, sehingga syarat tidak lengkap;</li>
+    <li>kondisi kedua diperiksa: nilai 78 lebih dari 60, sehingga nilai huruf B dipilih;</li>
+    <li>hasil ditampilkan dengan f-string.</li>
+  </ol>
+
+  <h2 id="s32">32. Ringkasan</h2>
+  <table class="tight">
+    <tr><th>Konsep</th><th>Keterangan</th></tr>
+    <tr><td>Kondisi</td><td>Ekspresi yang bernilai <code>True</code> atau <code>False</code>.</td></tr>
+    <tr><td>Boolean</td><td>Tipe data dengan dua nilai, yaitu <code>True</code> dan <code>False</code>.</td></tr>
+    <tr><td>Operator perbandingan</td><td><code>==</code>, <code>!=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>.</td></tr>
+    <tr><td>Operator logika</td><td><code>and</code>, <code>or</code>, <code>not</code>.</td></tr>
+    <tr><td><code>if</code></td><td>Menjalankan blok ketika kondisi benar.</td></tr>
+    <tr><td><code>elif</code></td><td>Kondisi tambahan dalam rantai percabangan.</td></tr>
+    <tr><td><code>else</code></td><td>Blok yang berjalan ketika semua kondisi sebelumnya salah.</td></tr>
+    <tr><td>Indentasi</td><td>Bagian dari aturan sintaks Python, bukan sekadar tampilan.</td></tr>
+  </table>
+  <h2 id="s33">33. Materi berikutnya: perulangan</h2>
+  <p>Bab ini membuat program mampu mengambil keputusan satu kali. Pada bab berikutnya, program akan mampu mengulang tindakan berkali-kali menggunakan <code>while</code> dan <code>for</code>.</p>
+<footer>
+    <p class="eyebrow">Sumber</p>
+    <a href="https://docs.python.org/3/tutorial/controlflow.html">Python Documentation — More Control Flow Tools</a>
+    <a href="https://docs.python.org/3/reference/expressions.html#comparisons">Python Documentation — Comparisons</a>
+    <a href="https://docs.python.org/3/reference/expressions.html#boolean-operations">Python Documentation — Boolean operations</a>
+    <a href="https://docs.python.org/3/library/stdtypes.html#truth-value-testing">Python Documentation — Truth Value Testing</a>
+    <a href="https://peps.python.org/pep-0008/">PEP 8 — Style Guide for Python Code</a>
+    <a href="https://realpython.com/python-truthy-falsy/">Real Python — Truthy and Falsy Values</a>
+  </footer>
+</div>
+<script>
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById('theme');
+    var glyph = btn.querySelector('span');
+
+    function isDark() {
+      var set = root.getAttribute('data-theme');
+      if (set) return set === 'dark';
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+
+    function paint() { glyph.textContent = isDark() ? '\u263E' : '\u2600'; }
+
+    btn.addEventListener('click', function () {
+      root.setAttribute('data-theme', isDark() ? 'light' : 'dark');
+      try { localStorage.setItem('theme', root.getAttribute('data-theme')); } catch (e) {}
+      paint();
+    });
+
+    paint();
+  })();
+</script>
+</body>
+</html>
